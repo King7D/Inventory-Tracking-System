@@ -3,9 +3,11 @@
 2.Activate the virtual environment:
 
 -On Windows:
-enter and run *venv\Scripts\activate*
+Enter and run *venv\Scripts\activate*
 
 -On macOS/Linux:
-enter and run *source venv/bin/activate*
+Enter and run *source venv/bin/activate*
 
-3. enter and run *python "Your File location"\app.py* 
+3.Enter and run *python "Your File location"\app.py* 
+
+4.Open the browser and go to http://127.0.0.1:5000/ to view the inventory management dashboard.
