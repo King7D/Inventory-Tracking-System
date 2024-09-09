@@ -19,9 +19,8 @@ Technology Stack:
 - CSV Support: Python csv module for handling CSV files.
 ---
 
-
-
 Setup Instructions:
+
 1.Open a terminal or command prompt
 
 2.Activate the virtual environment:
