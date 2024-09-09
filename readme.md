@@ -33,4 +33,9 @@ Enter and run *source venv/bin/activate*
 3.Enter and run *python "Your File location"\app.py* 
 
 4.Open the browser and go to http://127.0.0.1:5000/ to view the inventory management dashboard.
+---
+
+Screenshots:
 ![微信截图_20240908232543](https://github.com/user-attachments/assets/c1239a3d-c3fe-49e7-9a5f-fb2286069591)
+![微信截图_20240908232605](https://github.com/user-attachments/assets/c983858f-2bc4-4090-9c22-0df43b79169c)
+![微信截图_20240908232615](https://github.com/user-attachments/assets/23993c60-8e31-48c2-b673-08773db26682)
