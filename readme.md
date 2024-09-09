@@ -1,5 +1,6 @@
-Inventory Management System
+##Inventory Management System
 This is a simple web-based inventory management system built using Flask and SQLAlchemy, designed to manage inventory items with the ability to import and export data using CSV files.
+
 ---
 
 Features:
@@ -33,6 +34,7 @@ Enter and run *source venv/bin/activate*
 3.Enter and run *python "Your File location"\app.py* 
 
 4.Open the browser and go to http://127.0.0.1:5000/ to view the inventory management dashboard.
+
 ---
 
 Screenshots:
