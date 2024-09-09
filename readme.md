@@ -1,4 +1,5 @@
 **Inventory Management System**
+---
 This is a simple web-based inventory management system built using Flask and SQLAlchemy, designed to manage inventory items with the ability to import and export data using CSV files.
 
 ---
