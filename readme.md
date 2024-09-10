@@ -7,7 +7,7 @@ This is a simple web-based inventory management system built using Flask and SQL
 Features:
 - CRUD operations: Create, read, update, and delete inventory items (item name, quantity, price).
 - CSV Import/Export: Easily export the inventory list to a CSV file and import inventory data from a CSV file, replacing old data.
-- Sorting: Sort inventory items by name, quantity, or price in ascending or descending order.
+- Sorting: Sort inventory items by date,name,ID, quantity, or price in ascending or descending order.
 - Flash Messages: Informative messages displayed to the user after each action (e.g., item added, updated, or deleted).
 - User-Friendly UI: Responsive, intuitive design with action buttons (add, edit, delete, export, import).
 - Cancel Actions: Cancel buttons in edit and import modes, allowing users to return to the main page without making changes.
