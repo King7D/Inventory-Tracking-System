@@ -1,6 +1,6 @@
-**Inventory Management System**
+**EVO Inventory Tracking System**
 ---
-This is a simple web-based inventory management system built using Flask and SQLAlchemy, designed to manage inventory items with the ability to import and export data using CSV files.
+This is a simple web-based inventory tracking system built using Flask and SQLAlchemy, designed to manage inventory items with the ability to import and export data using CSV files.
 
 ---
 
@@ -38,6 +38,7 @@ Enter and run *source venv/bin/activate*
 ---
 
 Screenshots:
-![1](https://github.com/user-attachments/assets/29aaacdd-87e7-483b-8307-e2fcc30cbc5c)
-![2](https://github.com/user-attachments/assets/4d182d02-f0ca-4fd7-a335-98a2c6420cf7)
-![微信截图_20240908232615](https://github.com/user-attachments/assets/23993c60-8e31-48c2-b673-08773db26682)
+![1](https://github.com/user-attachments/assets/910b8756-e999-470b-ad96-b5fd42c82a48)
+![2](https://github.com/user-attachments/assets/a0e206f5-14ae-471b-b552-63cce1b9128f)
+![3](https://github.com/user-attachments/assets/3940c6bb-cd2f-43a3-ac5e-9421c6f1c810)
+
