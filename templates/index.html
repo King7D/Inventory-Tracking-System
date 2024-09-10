@@ -221,43 +221,49 @@
 
         <!-- If we are in 'index' mode (default) -->
         {% if mode == 'index' %}
-            <!-- Form to Add Item -->
             <form action="/add" method="POST" class="inventory-form">
                 <div class="form-row">
                     <input type="text" name="item_name" placeholder="Item Name" required>
+                    <input type="text" name="item_number" placeholder="Item Number" required>
                     <input type="number" name="quantity" placeholder="Quantity" required>
                     <input type="number" step="0.01" name="price" placeholder="Price" required>
                     <button type="submit" class="btn-add">Add Item</button>
                 </div>
             </form>
-
-            <!-- Inventory List using flexbox for box-like design -->
+            
             <div class="inventory-list">
                 <div class="inventory-header">
-                    <div class="header-item">Item Name</div>
-                    <div class="header-item">Quantity</div>
-                    <div class="header-item">Price</div>
-                    <div class="header-item">Action</div>
-                </div>
+                <div class="header-item">Date Added</div> 
+                <div class="header-item">Item Name</div>
+                <div class="header-item">Item Number</div>
+                <div class="header-item">Quantity</div>
+                <div class="header-item">Price</div>
+                <div class="header-item">Action</div>
+            </div>
 
-                {% for item in items %}
-                <div class="inventory-row">
-                    <div class="item">{{ item.item_name }}</div>
-                    <div class="item">{{ item.quantity }}</div>
-                    <div class="item">{{ item.price }}</div>
-                    <div class="item">
-                        <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
-                        <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
-                    </div>
-                </div>
-                {% endfor %}
+{% for item in items %}
+    <div class="inventory-row">
+        <div class="item">{{ item.date_added.strftime('%Y-%m-%d') }}</div> 
+        <div class="item">{{ item.item_name }}</div>
+        <div class="item">{{ item.item_number }}</div>
+        <div class="item">{{ item.quantity }}</div>
+        <div class="item">{{ item.price }}</div>
+        <div class="item">
+            <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
+            <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+        </div>
+    </div>
+{% endfor %}
+
             </div>
         {% endif %}
 
         {% if mode == 'edit' %}
         <!-- Inventory Headers for Edit -->
         <div class="inventory-header">
+            <div class="header-item">Date Added</div>
             <div class="header-item">Item Name</div>
+            <div class="header-item">Item Number</div>
             <div class="header-item">Quantity</div>
             <div class="header-item">Price</div>
             <div class="header-item">Action</div>
@@ -266,15 +272,32 @@
         <!-- Edit Form styled like the home page -->
         <div class="inventory-row">
             <form action="/edit/{{ item.id }}" method="POST" style="display: flex; justify-content: space-between; width: 100%;">
+                <!-- Editable Date Added field -->
+                <div class="item" style="flex: 1; text-align: left;">
+                    <input type="date" name="date_added" value="{{ item.date_added.strftime('%Y-%m-%d') }}" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                </div>
+        
+                <!-- Item Name -->
                 <div class="item" style="flex: 1; text-align: left;">
                     <input type="text" name="item_name" value="{{ item.item_name }}" placeholder="Item Name" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
                 </div>
+        
+                <!-- Item Number -->
+                <div class="item" style="flex: 1; text-align: left;">
+                    <input type="text" name="item_number" value="{{ item.item_number }}" placeholder="Item Number" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                </div>
+        
+                <!-- Quantity -->
                 <div class="item" style="flex: 1; text-align: left;">
                     <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantity" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
                 </div>
+        
+                <!-- Price -->
                 <div class="item" style="flex: 1; text-align: left;">
                     <input type="number" step="0.01" name="price" value="{{ item.price }}" placeholder="Price" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
                 </div>
+        
+                <!-- Action Buttons -->
                 <div class="item" style="flex: 1; text-align: left; display: flex; gap: 10px;">
                     <button type="submit" class="btn-update" style="width: 45%; padding: 10px;">Update</button>
                     <a href="/" class="btn-cancel" style="width: 45%; padding: 10px; text-align: center; background-color: #FF4136; color: white; border-radius: 5px; text-decoration: none;">Cancel</a>
