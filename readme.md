@@ -38,6 +38,6 @@ Enter and run *source venv/bin/activate*
 ---
 
 Screenshots:
-![微信截图_20240908232543](https://github.com/user-attachments/assets/c1239a3d-c3fe-49e7-9a5f-fb2286069591)
-![微信截图_20240908232605](https://github.com/user-attachments/assets/c983858f-2bc4-4090-9c22-0df43b79169c)
+![1](https://github.com/user-attachments/assets/29aaacdd-87e7-483b-8307-e2fcc30cbc5c)
+![2](https://github.com/user-attachments/assets/4d182d02-f0ca-4fd7-a335-98a2c6420cf7)
 ![微信截图_20240908232615](https://github.com/user-attachments/assets/23993c60-8e31-48c2-b673-08773db26682)
