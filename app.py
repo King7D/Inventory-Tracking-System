@@ -19,6 +19,7 @@ class InventoryItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    last_changed = db.Column(db.DateTime, nullable=True)
 
 
 # Route for the main inventory page with sorting functionality
@@ -75,7 +76,6 @@ def edit_item(id):
     item = InventoryItem.query.get_or_404(id)
 
     if request.method == 'POST':
-        # Get the updated values from the form
         updated_item_name = request.form['item_name']
         updated_item_number = request.form['item_number']
         updated_quantity = int(request.form['quantity'])
@@ -88,15 +88,16 @@ def edit_item(id):
                 updated_quantity == item.quantity and
                 updated_price == item.price and
                 updated_date_added == item.date_added):
+            
             # Flash a message that nothing has changed
             flash('Nothing has been changed', 'info')
         else:
-            # If values are changed, update the item's attributes and commit
             item.item_number = updated_item_number
             item.item_name = updated_item_name
             item.quantity = updated_quantity
             item.price = updated_price
             item.date_added = updated_date_added
+            item.last_changed = datetime.utcnow() 
             db.session.commit()
             flash('Item updated successfully!', 'success')
 
@@ -112,7 +113,6 @@ def delete_item(id):
     # Fetch the item by its ID, return 404 error if not found
     item = InventoryItem.query.get_or_404(id)
 
-    # Delete the item from the database
     db.session.delete(item)
     db.session.commit()
 
@@ -130,12 +130,24 @@ def export_csv():
 
     # Generate CSV data in memory
     si = StringIO()  # Use StringIO to generate CSV in memory
-    writer = csv.writer(si)  # Initialize the CSV writer
-    writer.writerow(['Date Added', 'Item Name', 'ID', 'Quantity', 'Price'])  # Write CSV headers
+    writer = csv.writer(si) 
+    writer.writerow(['Date Added', 'Item Name', 'ID', 'Quantity', 'Price', 'Last Changed'])  # Write CSV headers
 
-    # Write each item's data to the CSV, format the date as 'YYYY-MM-DD'
+    # Write each item's data to the CSV, format the date as 'YYYY/MM/DD' for both dates
     for item in items:
-        writer.writerow([item.date_added.strftime('%Y-%m-%d'), item.item_name, item.id, item.quantity, item.price])
+        date_added = item.date_added.strftime('%Y/%m/%d')
+
+        last_changed = item.last_changed.strftime('%Y/%m/%d') if item.last_changed else ''
+
+        # Write the row with properly formatted dates
+        writer.writerow([
+            date_added,              # Format date_added to 'YYYY/MM/DD'
+            item.item_name,          # Item name
+            item.id,                 # ID
+            item.quantity,           # Quantity
+            item.price,              # Price
+            last_changed             # Last changed (formatted or empty)
+        ])
 
     # Get the CSV data as a string and encode it to bytes
     output = si.getvalue().encode('utf-8')
@@ -146,9 +158,8 @@ def export_csv():
         BytesIO(output),  
         mimetype='text/csv', 
         as_attachment=True,  
-        download_name='inventory.csv' 
+        download_name='inventory.csv'  # Name the CSV file
     )
-
 
 # Route for importing inventory from a CSV file and replacing old data
 @app.route('/import', methods=['GET', 'POST'])
@@ -173,11 +184,15 @@ def import_csv():
 
         # Add each row from the CSV as a new inventory item
         for row in reader:
-            date_added = datetime.strptime(row[0], '%Y-%m-%d') 
+            # Handle date_added and last_changed date formats (allow empty last_changed)
+            date_added = datetime.strptime(row[0], '%Y/%m/%d')  # Assuming the CSV has the format 'YYYY/MM/DD'
             item_name = row[1]
             item_number = row[2]
             quantity = int(row[3])
             price = float(row[4])
+            
+            # If last_changed is present, format it; otherwise, set it to None
+            last_changed = datetime.strptime(row[5], '%Y/%m/%d') if row[5] else None
 
             # Create a new inventory item
             new_item = InventoryItem(
@@ -185,7 +200,8 @@ def import_csv():
                 item_name=item_name,
                 item_number=item_number,
                 quantity=quantity,
-                price=price
+                price=price,
+                last_changed=last_changed  # Can be None if not present in the CSV
             )
 
             # Add the item to the database session
@@ -202,6 +218,7 @@ def import_csv():
 
     # Render the index.html in 'import' mode to display the import form
     return render_template('index.html', mode='import')
+
 
 # Initialize the database and create the required tables if they don't exist
 if __name__ == '__main__':
