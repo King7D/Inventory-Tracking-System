@@ -173,7 +173,7 @@ def import_csv():
 
         # Add each row from the CSV as a new inventory item
         for row in reader:
-            date_added = datetime.strptime(row[0], '%Y-%m-%d')  # Parse the date from 'YYYY-MM-DD' format
+            date_added = datetime.strptime(row[0], '%Y-%m-%d') 
             item_name = row[1]
             item_number = row[2]
             quantity = int(row[3])
