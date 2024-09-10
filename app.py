@@ -25,8 +25,8 @@ class InventoryItem(db.Model):
 @app.route('/')
 def index():
     # Get sorting parameters from URL query strings
-    sort_by = request.args.get('sort_by', 'date_added')  # Sort by 'item_name' by default
-    order = request.args.get('order', 'asc')  # Default sorting order is ascending
+    sort_by = request.args.get('sort_by', 'date_added')
+    order = request.args.get('order', 'asc')
 
     if order == 'asc':
         items = InventoryItem.query.order_by(
@@ -173,7 +173,6 @@ def import_csv():
 
         # Add each row from the CSV as a new inventory item
         for row in reader:
-            # Parse the date and other values (Date Added, Item Name, ID, Quantity, Price)
             date_added = datetime.strptime(row[0], '%Y-%m-%d')  # Parse the date from 'YYYY-MM-DD' format
             item_name = row[1]
             item_number = row[2]
@@ -182,7 +181,7 @@ def import_csv():
 
             # Create a new inventory item
             new_item = InventoryItem(
-                date_added=date_added,  # Use the parsed date
+                date_added=date_added, 
                 item_name=item_name,
                 item_number=item_number,
                 quantity=quantity,

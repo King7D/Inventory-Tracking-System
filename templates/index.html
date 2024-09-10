@@ -165,11 +165,10 @@
             background-color: #0056b3;
         }
 
-        /* Flash message container to be centered */
         .flash-messages {
             display: flex;
-            justify-content: center; /* Centers the content horizontally */
-            align-items: center; /* Centers the content vertically */
+            justify-content: center; 
+            align-items: center;
             margin: 20px auto;
             padding: 10px;
             width: 50%;
@@ -241,19 +240,19 @@
                 <div class="header-item">Action</div>
             </div>
 
-{% for item in items %}
-    <div class="inventory-row">
-        <div class="item">{{ item.date_added.strftime('%Y-%m-%d') }}</div> 
-        <div class="item">{{ item.item_name }}</div>
-        <div class="item">{{ item.item_number }}</div>
-        <div class="item">{{ item.quantity }}</div>
-        <div class="item">{{ item.price }}</div>
-        <div class="item">
-            <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
-            <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
-        </div>
-    </div>
-{% endfor %}
+        {% for item in items %}
+            <div class="inventory-row">
+                <div class="item">{{ item.date_added.strftime('%Y-%m-%d') }}</div> 
+                <div class="item">{{ item.item_name }}</div>
+                <div class="item">{{ item.item_number }}</div>
+                <div class="item">{{ item.quantity }}</div>
+                <div class="item">{{ item.price }}</div>
+                <div class="item">
+                    <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
+                    <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
 
             </div>
         {% endif %}
@@ -269,10 +268,10 @@
             <div class="header-item">Action</div>
         </div>
     
-        <!-- Edit Form styled like the home page -->
+        <!-- Edit -->
         <div class="inventory-row">
             <form action="/edit/{{ item.id }}" method="POST" style="display: flex; justify-content: space-between; width: 100%;">
-                <!-- Editable Date Added field -->
+                <!-- Date Added-->
                 <div class="item" style="flex: 1; text-align: left;">
                     <input type="date" name="date_added" value="{{ item.date_added.strftime('%Y-%m-%d') }}" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
                 </div>
@@ -311,7 +310,7 @@
                 <div class="form-row">
                     <input type="file" name="file" accept=".csv" required>
                     <button type="submit" class="btn-add">Upload</button>
-                    <!-- Red Cancel Button that redirects back to the main page -->
+                    <!-- Red Cancel Button -->
                     <a href="/" class="btn-cancel" style="padding: 12px 20px; text-align: center; background-color: #FF4136; color: white; border-radius: 5px; text-decoration: none;">Cancel</a>
                 </div>
             </form>
