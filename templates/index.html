@@ -1,39 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Tags and Title -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EVO Inventory Tracking System</title>
+
+    <!-- JavaScript for Theme Toggling with Persistence (Placed in Head) -->
+    <script>
+        // Apply theme as early as possible
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
+    <!-- Stylesheet with CSS Variables for Theming -->
     <style>
-        /* General body styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
+        :root {
+            /* Default Light Theme Colors */
+            --background-color: #f4f4f4;
+            --container-background: #fff;
+            --text-color: #333;
+            --primary-color: #007BFF;
+            --secondary-color: #fff;
+            --button-hover-color: #0056b3;
+            --danger-color: #FF4136;
+            --danger-hover-color: #E00000;
+            --header-background: #007BFF;
+            --input-border-color: #ddd;
+            --box-shadow-color: rgba(0, 0, 0, 0.1);
+            --flash-success-bg: #d4edda;
+            --flash-success-text: #155724;
+            --flash-success-border: #c3e6cb;
+            --flash-info-bg: #d1ecf1;
+            --flash-info-text: #0c5460;
+            --flash-info-border: #bee5eb;
+            --flash-danger-bg: #f8d7da;
+            --flash-danger-text: #721c24;
+            --flash-danger-border: #f5c6cb;
         }
 
-        /* Main container */
+        /* Dark Theme Overrides */
+        .dark-mode {
+            --background-color: #000;
+            --container-background: #1a1a1a;
+            --text-color: #FFD700;
+            --primary-color: #FFD700;
+            --secondary-color: #000;
+            --button-hover-color: #B8860B;
+            --danger-color: #FF4136;
+            --danger-hover-color: #E00000;
+            --header-background: #FFD700;
+            --input-border-color: #333;
+            --box-shadow-color: rgba(255, 215, 0, 0.1);
+            --flash-success-bg: #155724;
+            --flash-success-text: #d4edda;
+            --flash-success-border: #155724;
+            --flash-info-bg: #0c5460;
+            --flash-info-text: #d1ecf1;
+            --flash-info-border: #0c5460;
+            --flash-danger-bg: #721c24;
+            --flash-danger-text: #f8d7da;
+            --flash-danger-border: #721c24;
+        }
+
+        /* General Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            background-color: var(--container-background);
+            box-shadow: 0 0 15px var(--box-shadow-color);
             border-radius: 8px;
             position: relative;  
+            transition: background-color 0.3s ease;
         }
 
-        /* Header for the page */
+        /* Header */
         h1 {
-            color: #007BFF;
+            color: var(--primary-color);
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 30px;
         }
 
-        /* Form styling */
+        /* Inventory Form */
         .inventory-form {
             display: flex;
             justify-content: center;
@@ -49,23 +113,25 @@
         .inventory-form input, .inventory-form button {
             padding: 12px;
             font-size: 1rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
             border-radius: 5px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .inventory-form button {
-            background-color: #007BFF;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
         .inventory-form button:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-color);
         }
 
-        /* Action buttons (export and import) */
+        /* Actions (Export, Import, Theme Toggle) */
         .actions {
             position: absolute;
             top: 20px;
@@ -75,29 +141,31 @@
         }
 
         .actions .btn-action {
-            background-color: #007BFF;
-            color: white;
-            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 5px 8px; /* Further reduced padding */
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 0.8rem; /* Further reduced font size */
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         .actions .btn-action:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-color);
         }
 
+        /* Inventory Header */
         .inventory-header {
             display: flex;
             justify-content: space-between;
-            background-color: #007BFF;
-            color: white;
+            background-color: var(--header-background);
+            color: var(--secondary-color);
             padding: 15px;
             font-weight: bold;
             border-radius: 5px;
             margin-bottom: 15px;
+            transition: background-color 0.3s ease;
         }
 
         .header-item {
@@ -105,20 +173,21 @@
             text-align: left;
         }
 
+        /* Inventory Rows */
         .inventory-row {
             display: flex;
             justify-content: space-between;
-            background-color: white;
+            background-color: var(--container-background);
             padding: 20px;
             margin-bottom: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border-color);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px var(--box-shadow-color);
+            transition: box-shadow 0.3s ease, background-color 0.3s ease;
         }
 
         .inventory-row:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px var(--box-shadow-color);
         }
 
         .item {
@@ -126,11 +195,12 @@
             text-align: left;
         }
 
+        /* Edit and Delete Buttons */
         a.btn-edit, a.btn-delete {
             display: inline-block;
             padding: 8px 12px;
-            background-color: #007BFF;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             border-radius: 5px;
             text-decoration: none;
             margin-right: 5px;
@@ -138,21 +208,21 @@
         }
 
         a.btn-edit:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-color);
         }
 
         a.btn-delete {
-            background-color: #FF4136;
+            background-color: var(--danger-color);
         }
 
         a.btn-delete:hover {
-            background-color: #E00000;
+            background-color: var(--danger-hover-color);
         }
 
-        /* Blue Update Button */
+        /* Update Button */
         .btn-update {
-            background-color: #007BFF;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
             padding: 12px 20px;
             border: none;
             border-radius: 5px;
@@ -162,9 +232,10 @@
         }
 
         .btn-update:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-color);
         }
 
+        /* Flash Messages */
         .flash-messages {
             display: flex;
             justify-content: center; 
@@ -175,25 +246,52 @@
             border-radius: 5px;
         }
 
-        /* Success message */
+        /* Success Message */
         .flash-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: var(--flash-success-bg);
+            color: var(--flash-success-text);
+            border: 1px solid var(--flash-success-border);
         }
 
-        /* Info message */
+        /* Info Message */
         .flash-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background-color: var(--flash-info-bg);
+            color: var(--flash-info-text);
+            border: 1px solid var(--flash-info-border);
         }
 
-        /* Danger message */
+        /* Danger Message */
         .flash-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background-color: var(--flash-danger-bg);
+            color: var(--flash-danger-text);
+            border: 1px solid var(--flash-danger-border);
+        }
+
+        /* Cancel Button */
+        .btn-cancel {
+            padding: 12px 20px;
+            text-align: center;
+            background-color: var(--danger-color);
+            color: var(--secondary-color);
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background-color: var(--danger-hover-color);
+        }
+
+        /* Input Fields in Edit Mode */
+        .inventory-row form input {
+            width: 90%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--input-border-color);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
     </style>
 </head>
@@ -201,10 +299,12 @@
     <div class="container">
         <h1>EVO Inventory Tracking</h1>
 
-        <!-- Top-right Export and Import buttons -->
+        <!-- Actions: Export, Import, Change Theme -->
         <div class="actions">
             <button onclick="window.location.href='/export'" class="btn-action">Export as CSV</button>
             <button onclick="window.location.href='/import'" class="btn-action">Import from CSV</button>
+            <!-- Change Theme Button -->
+            <button onclick="toggleTheme()" class="btn-action">Change Theme</button>
         </div>
 
         <!-- Flash Messages -->
@@ -218,8 +318,9 @@
             {% endif %}
         {% endwith %}
 
-        <!-- If we are in 'index' mode (default) -->
+        <!-- Index Mode -->
         {% if mode == 'index' %}
+            <!-- Inventory Form -->
             <form action="/add" method="POST" class="inventory-form">
                 <div class="form-row">
                     <input type="text" name="item_name" placeholder="Item Name" required>
@@ -230,94 +331,112 @@
                 </div>
             </form>
             
+            <!-- Inventory List -->
             <div class="inventory-list">
                 <div class="inventory-header">
-                <div class="header-item">Date Added</div> 
+                    <div class="header-item">Date Added</div> 
+                    <div class="header-item">Item Name</div>
+                    <div class="header-item">Item Number</div>
+                    <div class="header-item">Quantity</div>
+                    <div class="header-item">Price</div>
+                    <div class="header-item">Total Price</div> <!-- Added Total Price Header -->
+                    <div class="header-item">Last Changed</div>
+                    <div class="header-item">Action</div>
+                </div>
+
+                {% for item in items %}
+                    <div class="inventory-row">
+                        <div class="item">{{ item.date_added.strftime('%Y-%m-%d') }}</div> 
+                        <div class="item">{{ item.item_name }}</div>
+                        <div class="item">{{ item.item_number }}</div>
+                        <div class="item">{{ item.quantity }}</div>
+                        <div class="item">{{ '%.2f' | format(item.price) }}</div>
+                        <div class="item">{{ '%.2f' | format(item.quantity * item.price) }}</div> <!-- Calculated Total Price -->
+                        <div class="item">{{ item.last_changed.strftime('%Y-%m-%d') if item.last_changed else 'N/A' }}</div>
+                        <div class="item">
+                            <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
+                            <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+        <!-- Edit Mode -->
+        {% if mode == 'edit' %}
+            <!-- Inventory Header -->
+            <div class="inventory-header">
+                <div class="header-item">Date Added</div>
                 <div class="header-item">Item Name</div>
                 <div class="header-item">Item Number</div>
                 <div class="header-item">Quantity</div>
                 <div class="header-item">Price</div>
-                <div class="header-item">Last Changed</div>
                 <div class="header-item">Action</div>
             </div>
-
-        {% for item in items %}
+        
+            <!-- Edit Form -->
             <div class="inventory-row">
-                <div class="item">{{ item.date_added.strftime('%Y-%m-%d') }}</div> 
-                <div class="item">{{ item.item_name }}</div>
-                <div class="item">{{ item.item_number }}</div>
-                <div class="item">{{ item.quantity }}</div>
-                <div class="item">{{ item.price }}</div>
-                <div class="item">{{ item.last_changed.strftime('%Y-%m-%d') if item.last_changed else 'N/A' }}</div>
-                <div class="item">
-                    <a href="/edit/{{ item.id }}" class="btn-edit">Edit</a>
-                    <a href="/delete/{{ item.id }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
-                </div>
-            </div>
-        {% endfor %}
+                <form action="/edit/{{ item.id }}" method="POST" style="display: flex; justify-content: space-between; width: 100%;">
+                    <!-- Date Added-->
+                    <div class="item">
+                        <input type="date" name="date_added" value="{{ item.date_added.strftime('%Y-%m-%d') }}" required>
+                    </div>
+            
+                    <!-- Item Name -->
+                    <div class="item">
+                        <input type="text" name="item_name" value="{{ item.item_name }}" placeholder="Item Name" required>
+                    </div>
+            
+                    <!-- Item Number -->
+                    <div class="item">
+                        <input type="text" name="item_number" value="{{ item.item_number }}" placeholder="Item Number" required>
+                    </div>
+            
+                    <!-- Quantity -->
+                    <div class="item">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantity" required>
+                    </div>
+            
+                    <!-- Price -->
+                    <div class="item">
+                        <input type="number" step="0.01" name="price" value="{{ item.price }}" placeholder="Price" required>
+                    </div>
 
+                    <!-- Action Buttons -->
+                    <div class="item" style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-update">Update</button>
+                        <a href="/" class="btn-cancel">Cancel</a>
+                    </div>
+                </form>
             </div>
         {% endif %}
-
-        {% if mode == 'edit' %}
-        <!-- Inventory Headers for Edit -->
-        <div class="inventory-header">
-            <div class="header-item">Date Added</div>
-            <div class="header-item">Item Name</div>
-            <div class="header-item">Item Number</div>
-            <div class="header-item">Quantity</div>
-            <div class="header-item">Price</div>
-            <div class="header-item">Action</div>
-        </div>
     
-        <!-- Edit -->
-        <div class="inventory-row">
-            <form action="/edit/{{ item.id }}" method="POST" style="display: flex; justify-content: space-between; width: 100%;">
-                <!-- Date Added-->
-                <div class="item" style="flex: 1; text-align: left;">
-                    <input type="date" name="date_added" value="{{ item.date_added.strftime('%Y-%m-%d') }}" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                </div>
-        
-                <!-- Item Name -->
-                <div class="item" style="flex: 1; text-align: left;">
-                    <input type="text" name="item_name" value="{{ item.item_name }}" placeholder="Item Name" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                </div>
-        
-                <!-- Item Number -->
-                <div class="item" style="flex: 1; text-align: left;">
-                    <input type="text" name="item_number" value="{{ item.item_number }}" placeholder="Item Number" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                </div>
-        
-                <!-- Quantity -->
-                <div class="item" style="flex: 1; text-align: left;">
-                    <input type="number" name="quantity" value="{{ item.quantity }}" placeholder="Quantity" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                </div>
-        
-                <!-- Price -->
-                <div class="item" style="flex: 1; text-align: left;">
-                    <input type="number" step="0.01" name="price" value="{{ item.price }}" placeholder="Price" required style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="item" style="flex: 1; text-align: left; display: flex; gap: 10px;">
-                    <button type="submit" class="btn-update" style="width: 45%; padding: 10px;">Update</button>
-                    <a href="/" class="btn-cancel" style="width: 45%; padding: 10px; text-align: center; background-color: #FF4136; color: white; border-radius: 5px; text-decoration: none;">Cancel</a>
-                </div>
-            </form>
-        </div>
-        {% endif %}
-    
+        <!-- Import Mode -->
         {% if mode == 'import' %}
+            <!-- Import Form -->
             <form action="/import" method="POST" enctype="multipart/form-data" class="inventory-form">
                 <div class="form-row">
                     <input type="file" name="file" accept=".csv" required>
                     <button type="submit" class="btn-add">Upload</button>
-                    <!-- Cancel Button -->
-                    <a href="/" class="btn-cancel" style="padding: 12px 20px; text-align: center; background-color: #FF4136; color: white; border-radius: 5px; text-decoration: none;">Cancel</a>
+                    <a href="/" class="btn-cancel">Cancel</a>
                 </div>
             </form>
         {% endif %}
 
     </div>
+
+    <!-- JavaScript for Theme Toggling with Persistence -->
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark-mode');
+            // Save the current theme to localStorage
+            if (document.documentElement.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+    </script>
 </body>
 </html>

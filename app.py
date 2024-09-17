@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, flash
+from flask import Flask, render_template, request, redirect, url_for, send_file, flash, make_response
 from flask_sqlalchemy import SQLAlchemy
 import csv
 from io import StringIO, BytesIO
@@ -21,6 +21,9 @@ class InventoryItem(db.Model):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     last_changed = db.Column(db.DateTime, nullable=True)
 
+# Function to get the current theme from cookies
+def get_theme():
+    return request.cookies.get('theme', 'light')
 
 # Route for the main inventory page with sorting functionality
 @app.route('/')
@@ -44,8 +47,10 @@ def index():
             db.desc(InventoryItem.quantity)   
         ).all()
 
-    # Render the index.html page with the sorted items
-    return render_template('index.html', items=items, mode='index', sort_by=sort_by, order=order)
+    theme = get_theme()
+
+    # Render the index.html page with the sorted items and theme
+    return render_template('index.html', items=items, mode='index', sort_by=sort_by, order=order, theme=theme)
 
 # Route for adding new items to the inventory
 @app.route('/add', methods=['POST'])
@@ -104,8 +109,10 @@ def edit_item(id):
         # Redirect back to the index page
         return redirect(url_for('index'))
 
-    # If the request is GET, render the index.html in 'edit' mode with the item details
-    return render_template('index.html', item=item, mode='edit')
+    theme = get_theme()
+
+    # If the request is GET, render the index.html in 'edit' mode with the item details and theme
+    return render_template('index.html', item=item, mode='edit', theme=theme)
 
 # Route for deleting an item
 @app.route('/delete/<int:id>')
@@ -216,9 +223,23 @@ def import_csv():
         # Redirect back to the index page
         return redirect(url_for('index'))
 
-    # Render the index.html in 'import' mode to display the import form
-    return render_template('index.html', mode='import')
+    theme = get_theme()
 
+    # Render the index.html in 'import' mode to display the import form and theme
+    return render_template('index.html', mode='import', theme=theme)
+
+# Route to toggle the theme
+@app.route('/toggle_theme')
+def toggle_theme():
+    # Get the current theme from cookies
+    current_theme = request.cookies.get('theme', 'light')
+    # Toggle the theme
+    new_theme = 'dark' if current_theme == 'light' else 'light'
+    # Create a response object
+    resp = redirect(request.referrer or url_for('index'))
+    # Set the new theme in cookies
+    resp.set_cookie('theme', new_theme, max_age=60*60*24*365)  # Cookie expires in 1 year
+    return resp
 
 # Initialize the database and create the required tables if they don't exist
 if __name__ == '__main__':
