@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'New Item' if mode=='create' else 'Edit Item' }} — EVO{% endblock %}
+{% block content %}
+  <form method="post">
+    {{ form.hidden_tag() }}
+
+    {% if form.errors %}
+      <div class="toast error">{{ form.errors }}</div>
+    {% endif %}
+
+    <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px">
+      <label>SKU {{ form.sku(class_='input') }}</label>
+      <label>Name {{ form.name(class_='input') }}</label>
+
+      <label>Price {{ form.price(class_='input') }}</label>
+      <label>On-hand {{ form.on_hand(class_='input') }}</label>
+
+      <label>On-transit {{ form.on_transit(class_='input') }}</label>
+      <label>Reorder Point {{ form.reorder_point(class_='input') }}</label>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:8px">
+      <button class="btn" type="submit">{{ 'Create' if mode=='create' else 'Update' }}</button>
+      <a class="btn secondary" href="{{ url_for('index') }}">Cancel</a>
+    </div>
+
+    <p style="margin-top:10px;color:var(--muted)">
+      <strong>Notes:</strong> On-hand updates the physical quantity in the default location. 
+      Total = Available + On-transit. Rows highlight when Total ≤ Reorder Point.
+    </p>
+  </form>
+{% endblock %}

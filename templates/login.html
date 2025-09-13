@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — EVO Inventory Tracking</title>
+  <style>
+    :root{
+      --bg:#f4f6f8; --card:#ffffff; --txt:#222; --muted:#6b7280; --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08); --primary:#007BFF; --primary-700:#0056b3;
+    }
+    body{display:grid;place-items:center;height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);margin:0;color:var(--txt)}
+    .card{padding:24px;border:1px solid var(--border);border-radius:10px;min-width:340px;background:var(--card);box-shadow:var(--shadow)}
+    .brand{font-weight:800;font-size:18px;letter-spacing:.3px;color:var(--primary);margin-bottom:6px;text-align:center}
+    h2{margin:6px 0 16px 0;text-align:center}
+    .input{padding:10px;border:1px solid #ddd;border-radius:8px;width:100%;background:#fff}
+    .btn{padding:10px 14px;border:none;border-radius:8px;background:var(--primary);color:#fff;margin-top:10px;width:100%;cursor:pointer;font-weight:600}
+    .btn:hover{background:var(--primary-700)}
+    .note{margin-top:10px;color:var(--muted);text-align:center;font-size:13px}
+    .flash{margin-top:10px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">EVO Inventory Tracking</div>
+    <h2>Sign in</h2>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div style="margin-bottom:10px"><label>Email {{ form.email(class_='input') }}</label></div>
+      <div style="margin-bottom:10px"><label>Password {{ form.password(class_='input') }}</label></div>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="note">Use your assigned credentials to access the dashboard.</div>
+  </div>
+</body>
+</html>

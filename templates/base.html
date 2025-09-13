@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EVO Inventory{% endblock %}</title>
+  <style>
+    :root{
+      --bg:#f4f6f8; --card:#ffffff; --txt:#222; --muted:#6b7280; --border:#e5e7eb;
+      --shadow:0 6px 20px rgba(0,0,0,.08); --primary:#007BFF; --primary-700:#0056b3;
+      --danger:#FF4136; --danger-700:#E00000; --radius:10px;
+    }
+    .dark-mode{
+      --bg:#000; --card:#121212; --txt:#ffd700; --muted:#b59400; --border:#2a2a2a;
+      --shadow:0 6px 20px rgba(255,215,0,.08); --primary:#ffd700; --primary-700:#b8860b;
+      --danger:#FF4136; --danger-700:#E00000;
+    }
+    html,body{height:100%}
+    body{margin:0; background:var(--bg); color:var(--txt);
+         font: 14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+
+    .toolbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px}
+    .toolbar-left,.toolbar-right{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+    /* Brand / system name */
+    .brand{
+      font-weight:800; font-size:18px; letter-spacing:.3px;
+      color:var(--primary); margin-right:10px;
+    }
+    .dark-mode .brand{ color:var(--primary) }
+
+    .btn{display:inline-flex; align-items:center; justify-content:center;
+         padding:8px 12px; border-radius:9px; border:1px solid transparent;
+         background:var(--primary); color:#fff; text-decoration:none; cursor:pointer;
+         transition: all .15s ease; font-weight:600; font-size:13px;}
+    .btn:hover{ background:var(--primary-700) }
+    .btn.secondary{ background:#f3f4f6; color:#111827; border-color:var(--border) }
+    .dark-mode .btn.secondary{ background:#1f2937; color:#e5e7eb; border-color:#374151 }
+    .btn.secondary:hover{ filter:brightness(.95) }
+    .btn.danger{ background:var(--danger) }
+    .btn.danger:hover{ background:var(--danger-700) }
+    .input{ padding:8px 10px; border:1px solid var(--border); border-radius:9px; background:var(--card); color:var(--txt); min-width:240px }
+
+    .toast{ padding:10px 12px; border-radius:8px; margin:8px 0; border:1px solid transparent; }
+    .toast.success{ background:#d4edda; color:#155724; border-color:#c3e6cb }
+    .toast.info{ background:#d1ecf1; color:#0c5460; border-color:#bee5eb }
+    /* ORANGE WARNING */
+    .toast.warning{ background:#fff0e0; color:#7a2e00; border-color:#ffb26b }
+    .dark-mode .toast.warning{ background:#3b2a14; color:#ffd8aa; border-color:#8a5d2a }
+
+    table{ width:100%; border-collapse:collapse }
+    th,td{ padding:12px 10px; border-bottom:1px solid var(--border); text-align:left }
+    thead th{ position:sticky; top:0; background:var(--card); z-index:1 }
+    .pagination{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-top:12px; color:var(--muted) }
+  </style>
+  <script>
+    (function(){ const theme = localStorage.getItem('theme'); if(theme === 'dark'){ document.documentElement.classList.add('dark-mode'); }})();
+    function toggleTheme(){ document.documentElement.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light'); }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <!-- System name -->
+        <div class="brand">EVO Inventory Tracking</div>
+
+        <a href="{{ url_for('index') }}" class="btn secondary">Dashboard</a>
+        <a href="{{ url_for('create_item') }}" class="btn">Add Item</a>
+        <a href="{{ url_for('export_csv') }}" class="btn">Export CSV</a>
+        <a href="{{ url_for('import_wizard') }}" class="btn">Import CSV</a>
+      </div>
+      <div class="toolbar-right">
+        <form class="search-form" method="get" action="{{ url_for('index') }}">
+          <input class="input" type="search" name="q" value="{{ request.args.get('q','') }}" placeholder="Search name/SKU"/>
+          <button class="btn secondary" type="submit">Search</button>
+        </form>
+        <button class="btn secondary" type="button" onclick="toggleTheme()">Theme</button>
+        {% if current_user.is_authenticated %}
+          <form method="post" action="{{ url_for('logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn secondary" type="submit">Logout</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="toast {{ 'error' if cat=='error' else cat }}">{{ msg|safe }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</body>
+</html>

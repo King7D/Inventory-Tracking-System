@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Import Inventory — EVO{% endblock %}
+{% block content %}
+  <p>Upload a CSV with headers: 
+    <code>Date Added, Item Name, SKU, Available, On-Transit, Total, Reorder Point, Price, Total Value, Last Changed</code>.
+  </p>
+
+  {% if not preview %}
+    <!-- Step 1: upload -> always dry-run preview -->
+    <form method="post" enctype="multipart/form-data" style="margin-bottom:10px">
+      {{ form.hidden_tag() }}
+      <input type="hidden" name="action" value="preview">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+        {{ form.file(class_='input') }}
+        <button class="btn" type="submit">Upload (Preview)</button>
+        <a class="btn secondary" href="{{ url_for('index') }}">Back to Dashboard</a>
+      </div>
+    </form>
+  {% else %}
+    <!-- Step 2: preview table + commit choices -->
+    <div style="margin-bottom:10px; display:flex; gap:8px; flex-wrap:wrap">
+      <form method="post">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="action" value="commit_upsert">
+        <button class="btn" type="submit">Commit (Upsert / Merge)</button>
+      </form>
+      <form method="post">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="action" value="commit_replace">
+        <button class="btn danger" type="submit" onclick="return confirm('Replace ALL items with this file? This cannot be undone.')">
+          Commit (Replace All Items)
+        </button>
+      </form>
+      <a class="btn secondary" href="{{ url_for('import_wizard') }}">Start Over</a>
+      <a class="btn secondary" href="{{ url_for('index') }}">Back to Dashboard</a>
+    </div>
+
+    <h3>Preview</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date Added</th><th>Item Name</th><th>SKU</th><th>Available</th>
+          <th>On-Transit</th><th>Total</th><th>Reorder Point</th>
+          <th>Price</th><th>Total Value</th><th>Last Changed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          {% set total = r.available + r.on_transit %}
+          {% set total_value = (total * r.price) %}
+          <tr>
+            <td>{{ r.date_added|fmt_local if r.date_added else '' }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.sku }}</td>
+            <td>{{ r.available }}</td>
+            <td>{{ r.on_transit }}</td>
+            <td>{{ total }}</td>
+            <td>{{ r.reorder_point }}</td>
+            <td>{{ '%.2f'|format(r.price) }}</td>
+            <td>{{ '%.2f'|format(total_value) }}</td>
+            <td>{{ r.last_changed|fmt_local if r.last_changed else '' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}
