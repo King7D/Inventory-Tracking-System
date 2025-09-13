@@ -1,24 +1,44 @@
-**EVO Inventory Tracking System**
----
-This is a simple web-based inventory tracking system built using Flask and SQLAlchemy, designed to manage inventory items with the ability to import and export data using CSV files.
+# EVO Inventory Tracking
 
----
+A pragmatic inventory web app built with Flask + SQLAlchem*. It provides a clean dashboard, CSV import/export, reorder alerts, and timezone-aware timestamps that follow the computer running the app.
 
-Features:
-- CRUD operations: Create, read, update, and delete inventory items (item name, quantity, price).
-- CSV Import/Export: Easily export the inventory list to a CSV file and import inventory data from a CSV file, replacing old data.
-- Sorting: Sort inventory items by date,name,ID, quantity, or price in ascending or descending order.
-- Flash Messages: Informative messages displayed to the user after each action (e.g., item added, updated, or deleted).
-- User-Friendly UI: Responsive, intuitive design with action buttons that works well on various screen sizes and devices.
----
+## Features
 
-Technology Stack:
-- Backend: Flask (Python), SQLAlchemy (SQLite database).
-- Frontend: HTML, CSS (using flexbox for layout), Bootstrap-style buttons.
-- CSV Support: Python csv module for handling CSV files.
----
+- **Dashboard**
+  - Columns: Date Added, Item Name, SKU, Available, On-Transit, Total, Reorder Point, Price, Total Value, Last Changed
+  - Total = Available + On-Transit
+  - Orange highlight + page banner when Total ≤ Reorder Point
+  - Sort by date, name, SKU, price, available, or "needs reorder"
+  - Search and pagination; light/dark theme toggle
 
-Setup Instructions:
+- **Items**
+  - Fields: SKU, Name, Price, On-hand, On-Transit, Reorder Point
+  - On-hand updates the physical quantity in the default location
+  - Available = On-hand − Allocated (allocated assumed 0 unless extended)
+
+- **CSV Import & Export**
+  - Export/Import header (required):  
+    `Date Added, Item Name, SKU, Available, On-Transit, Total, Reorder Point, Price, Total Value, Last Changed`
+  - Import is a two-step wizard: Upload → Preview → Commit (Upsert/Merge or Replace All)
+  - Minutes-level timestamp support (HH:MM)
+
+- **Timezone Awareness**
+  - Displays and exports in local (computer) timezone
+  - Stores datetimes internally in UTC (naive) for consistency
+
+- **Auth & Roles**
+  - Login with seeded users (`users_config.py`)
+  - Roles: `admin`, `ops`, `buyer`, `viewer` (mutations restricted)
+  - CSRF protection
+
+## Tech Stack
+
+- Flask, SQLAlchemy, Flask-Login, Flask-WTF
+- SQLite by default (use `DATABASE_URL` to switch)
+- `tzlocal` for system timezone detection
+- Simple HTML/CSS UI (dark-mode friendly)
+
+## Setup Instructions:
 
 1.Open a terminal or command prompt
 
@@ -34,13 +54,23 @@ Enter and run *source venv/bin/activate*
 
 4.Open the browser and go to http://127.0.0.1:5000/ to view the inventory management dashboard.
 
+## Requirements:
+- Flask
+- Flask-SQLAlchemy
+- Flask-Migrate
+- Flask-Login
+- Flask-WTF
+- email-validator
+- tzlocal
+
 ---
 
-Screenshots:
-![1](https://github.com/user-attachments/assets/06859580-8939-4a93-9d8a-59dc892e67bd)
-![2](https://github.com/user-attachments/assets/08ce7214-532c-485d-a373-0aabf64abe5b)
-![3](https://github.com/user-attachments/assets/d6e75337-37e6-45d0-8b61-c899de506782)
-![4](https://github.com/user-attachments/assets/3019692f-5d03-4a21-be8e-80095ed844b9)
+## Screenshots:
+<img width="1010" height="670" alt="evo1" src="https://github.com/user-attachments/assets/3ef1025d-a863-4bf2-b7fe-c7a8bb741288" />
+<img width="1286" height="614" alt="evo2" src="https://github.com/user-attachments/assets/1fd3ca68-6373-4aad-8546-4e73e1190d49" />
+<img width="1237" height="594" alt="evo3" src="https://github.com/user-attachments/assets/50831024-9fa7-42f6-b63d-ba0550fd1b7c" />
+<img width="1239" height="508" alt="evo4" src="https://github.com/user-attachments/assets/1dc6dd2a-9133-4873-9bc1-ac341162a34a" />
+
 
 
 
